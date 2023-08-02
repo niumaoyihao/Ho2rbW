@@ -1,0 +1,7 @@
+[
+{
+  "directory": "E:/niumaoyihao/VScode-workspace/projects/hw7_Matrix-H-F-Initialization/build",
+  "command": "C:\\Program-files\\mingw64\\bin\\g++.exe  @CMakeFiles/hf.dir/includes_CXX.rsp  -std=c++11 -O3 -DNDEBUG -o CMakeFiles\\hf.dir\\hf.cpp.obj -c E:\\niumaoyihao\\VScode-workspace\\projects\\hw7_Matrix-H-F-Initialization\\hf.cpp",
+  "file": "E:/niumaoyihao/VScode-workspace/projects/hw7_Matrix-H-F-Initialization/hf.cpp"
+}
+]

@@ -1,0 +1,3 @@
+E:\install_package\cmake-noinstall\cmake-3.22.0-rc1-windows-x86_64\bin\cmake.exe -E rm -f CMakeFiles\hf.dir/objects.a
+C:\Program-files\mingw64\bin\ar.exe qc CMakeFiles\hf.dir/objects.a @CMakeFiles\hf.dir\objects1.rsp
+C:\Program-files\mingw64\bin\g++.exe  -std=c++11 -O3 -DNDEBUG -Wl,--whole-archive CMakeFiles\hf.dir/objects.a -Wl,--no-whole-archive -o hf.exe -Wl,--out-implib,libhf.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\hf.dir\linklibs.rsp

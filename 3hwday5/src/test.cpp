@@ -15,7 +15,7 @@ std::string picture_stamp_path = "../picture_data/picture_stamp.txt";//路径需
 std::string imu_data_path = "../imu_data/dataset-corridor4_512.txt";//路径需根据自身情况调整
 struct ImuData
 {
-    double stamp;
+    double stamp; //时间戳
     Eigen::Vector3d acc_;
     Eigen::Vector3d omega_;
 };
@@ -72,28 +72,36 @@ int ComputeMeasurements(const std::vector<double> & picture_stamps, const std::v
                 double t_picture = imudata_tmp[k].stamp - picture_stamps[i];//第一帧imu数据到图像间隔
 
                 //*******************补全下面代码*********************//
-                acc =
-                w = 
-                t_step = 
+                acc = (imudata_tmp[k].acc_ + imudata_tmp[k+1].acc_ -
+                    (imudata_tmp[k+1].acc_ - imudata_tmp[k].acc_ )*(t_picture/t))*0.5f;             
+                w = (imudata_tmp[k].omega_ + imudata_tmp[k+1].omega_ - 
+                    (imudata_tmp[k+1].omega_ - imudata_tmp[k].omega_)*(t_picture/t))*0.5f;
+                t_step = imudata_tmp[k+1].stamp - picture_stamps[i];
             }
             else if(k < (n - 1))
             {
             	//*******************补全下面代码*********************//
-                acc = 
-                w = 
-                t_step = 
+                acc = (imudata_tmp[k].acc_ + imudata_tmp[k+1].acc_)*0.5f;
+                w = (imudata_tmp[k].omega_ + imudata_tmp[k+1].omega_)*0.5f;
+                t_step = imudata_tmp[k + 1].stamp - imudata_tmp[k].stamp;
             }
             else if((k > 0) && (k == (n - 1)))
             {
                 double t = imudata_tmp[k + 1].stamp - imudata_tmp[k].stamp;//单帧imu时间间隔
                 double t_picture = imudata_tmp[k + 1].stamp - picture_stamps[i];
                 //*******************补全下面代码*********************//
-                acc = 
-                w = 
-                t_step = 
+                acc = (imudata_tmp[k].acc_ + imudata_tmp[k+1].acc_ -
+                    (imudata_tmp[k+1].acc_ - imudata_tmp[k].acc_ )*(t_picture/t))*0.5f;
+                w = (imudata_tmp[k].omega_ + imudata_tmp[k+1].omega_ - 
+                    (imudata_tmp[k+1].omega_ - imudata_tmp[k].omega_)*(t_picture/t))*0.5f;
+                t_step = picture_stamps[i] - imudata_tmp[k].stamp;
             }
             //*******************补全下面3行代码*********************//
             // 记录IMU数据计算出来的加速度，角速度，时间间隔
+            preintegration_data_temp.acc_group.push_back(acc);
+            preintegration_data_temp.omega_group.push_back(w);
+            preintegration_data_temp.delta_t.push_back(t_step);
+            
             
         }
         preintegration_data_temp.imu_data_size = n;//两帧图像之间imu数据数量
@@ -152,11 +160,11 @@ int main(void)
         data[6] = atof(item.c_str());
 
 
-        imudata_temp.stamp = data[0] / 1e9;
-        imudata_temp.acc_[0] = data[4];
+        imudata_temp.stamp = data[0] / 1e9;  //时间戳
+        imudata_temp.acc_[0] = data[4];  // a_RS_S_x [m s^-2]
         imudata_temp.acc_[1] = data[5];
         imudata_temp.acc_[2] = data[6];
-        imudata_temp.omega_[0] = data[1];
+        imudata_temp.omega_[0] = data[1];  // w_RS_S_x [rad s^-1]
         imudata_temp.omega_[1] = data[2];
         imudata_temp.omega_[2] = data[3];
         imudata_v_.push_back(imudata_temp);//所有的imu数据
